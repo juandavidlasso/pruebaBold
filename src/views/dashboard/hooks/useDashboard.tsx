@@ -37,12 +37,32 @@ export const useDashboard = (data: DashboardState[]) => {
     const startOfSeptember = new Date(now.getFullYear(), 8, 1).getTime();
     const endOfSeptember = new Date(now.getFullYear(), 9, 1).getTime();
 
+    const formatDateWithZero = (date: Date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const isDateSearchTerm = (term: string) => {
+        const regex = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])$/;
+        return regex.test(term);
+    };
+
+    const normalizeSearchTerm = (term: string) => {
+        return term
+            .replace(/\s+/g, '')
+            .split('/')
+            .map((part) => part.padStart(2, '0'))
+            .join('/');
+    };
+
     const filterData = (
         data: DashboardState[],
         searchTerm: string,
         dateFilter: FiltersType
     ) => {
-        if (filterCheck.ALL) return data;
+        if (filterCheck.ALL && !searchTerm) return data;
 
         if (
             !searchTerm &&
@@ -52,23 +72,29 @@ export const useDashboard = (data: DashboardState[]) => {
         )
             return data;
 
+        const normalizedSearchTerm = isDateSearchTerm(searchTerm)
+            ? normalizeSearchTerm(searchTerm)
+            : searchTerm;
+
         return data.filter((item) => {
             const transformedStatus = transformStatus(item.status);
-            const formattedDate = new Date(item.createdAt).toLocaleString(
-                'es-CO'
-            );
+            const formattedDate = formatDateWithZero(new Date(item.createdAt));
             const amountFormatted = String(item.amount);
 
             const matchesSearch =
                 transformedStatus
                     .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
+                    .includes(normalizedSearchTerm.toLowerCase()) ||
                 formattedDate
                     .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                String(item.transactionReference).includes(searchTerm) ||
-                item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                amountFormatted.includes(searchTerm);
+                    .includes(normalizedSearchTerm.toLowerCase()) ||
+                String(item.transactionReference).includes(
+                    normalizedSearchTerm
+                ) ||
+                item.id
+                    .toLowerCase()
+                    .includes(normalizedSearchTerm.toLowerCase()) ||
+                amountFormatted.includes(normalizedSearchTerm);
 
             let matchesDateFilter = true;
             if (dateFilter) {

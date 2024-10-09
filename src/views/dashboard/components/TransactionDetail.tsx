@@ -37,10 +37,7 @@ const TransactionDetail: React.FC = () => {
                         borderBottomLeftRadius: 10
                     }
                 }}>
-                <Box
-                    role="presentation"
-                    onClick={() => setOpenDrawer(false)}
-                    sx={{ p: { xs: 1, sm: 3 } }}>
+                <Box role="presentation" sx={{ p: { xs: 1, sm: 3 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <IconButton onClick={() => setOpenDrawer(false)}>
                             <CloseIcon
