@@ -48,6 +48,7 @@ const Header: React.FC<Props> = ({ toogleTheme }) => {
 
     return (
         <AppBar
+            data-testid="header"
             position="static"
             sx={{
                 background:

@@ -13,7 +13,9 @@ interface Props {
 
 const Dashboard: React.FC<Props> = ({ data }) => {
     return (
-        <Box sx={{ width: '100%', p: { xs: 2, sm: 5 } }}>
+        <Box
+            sx={{ width: '100%', p: { xs: 2, sm: 5 } }}
+            data-testid="dashboardContainer">
             <TransactionDetail />
             <Box
                 sx={{ display: { xs: 'block', sm: 'flex' } }}

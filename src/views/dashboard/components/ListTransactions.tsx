@@ -26,7 +26,9 @@ const ListTransactions: React.FC<Props> = ({ data }) => {
         useContext(DashboardContext);
 
     return (
-        <Paper sx={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+        <Paper
+            sx={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+            data-testid="listTransactionTable">
             <Box
                 sx={{
                     width: '100%',
